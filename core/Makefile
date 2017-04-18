@@ -496,10 +496,8 @@ INSTALLED_RAMDISK_TARGET := $(BUILT_RAMDISK_TARGET)
 $(INSTALLED_RAMDISK_TARGET): $(MKBOOTFS) $(INTERNAL_RAMDISK_FILES) | $(MINIGZIP)
 	$(call pretty,"Target ram disk: $@")
 
-ifdef NEO_BUILD
 	# comma hax
-	cd $(TARGET_ROOT_OUT) && ~/one/phone/firmware/populate_ramdisk.sh
-endif
+	if [ ! -z "$NEO_BUILD" ]; then cd $(TARGET_ROOT_OUT) && ~/one/phone/firmware/populate_ramdisk.sh; fi
 
 	$(hide) $(MKBOOTFS) -d $(TARGET_OUT) $(TARGET_ROOT_OUT) | $(MINIGZIP) > $@
 
@@ -976,7 +974,7 @@ $(RECOVERY_INSTALL_OTA_KEYS): $(OTA_PUBLIC_KEYS) $(DUMPKEY_JAR) $(extra_keys)
 define build-recoveryramdisk
   @echo -e ${CL_CYN}"----- Making recovery ramdisk ------"${CL_RST}
   $(hide) mkdir -p $(TARGET_RECOVERY_OUT)
-  $(hide) rm -f $(TARGET_RECOVERY_ROOT_OUT)/tmp
+  $(hide) rm -rf $(TARGET_RECOVERY_ROOT_OUT)/tmp
   $(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/etc $(TARGET_RECOVERY_ROOT_OUT)/tmp
   @echo -e ${CL_CYN}"Copying baseline ramdisk..."${CL_RST}
   $(hide) rsync -a $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT) # "cp -Rf" fails to overwrite broken symlinks on Mac.
@@ -1244,10 +1242,8 @@ define build-systemimage-target
   $(call generate-userimage-prop-dictionary, $(systemimage_intermediates)/system_image_info.txt, \
       skip_fsck=true)
 
-ifdef NEO_BUILD
   # comma hax
-  cd ~/one/phone/firmware/ && ./populate_system.sh $(TARGET_OUT)
-endif
+  if [ ! -z "$NEO_BUILD" ]; then cd ~/one/phone/firmware/ && ./populate_system.sh $(TARGET_OUT); fi
 
   $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH \
       ./build/tools/releasetools/build_image.py \

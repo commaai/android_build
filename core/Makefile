@@ -497,7 +497,7 @@ $(INSTALLED_RAMDISK_TARGET): $(MKBOOTFS) $(INTERNAL_RAMDISK_FILES) | $(MINIGZIP)
 	$(call pretty,"Target ram disk: $@")
 
 	# comma hax
-	if [ ! -z "$NEO_BUILD" ]; then cd $(TARGET_ROOT_OUT) && ~/one/phone/firmware/populate_ramdisk.sh; fi
+	#if [ ! -z "$NEO_BUILD" ]; then cd $(TARGET_ROOT_OUT) && ~/one/phone/firmware/populate_ramdisk.sh; fi
 
 	$(hide) $(MKBOOTFS) -d $(TARGET_OUT) $(TARGET_ROOT_OUT) | $(MINIGZIP) > $@
 
@@ -1243,7 +1243,7 @@ define build-systemimage-target
       skip_fsck=true)
 
   # comma hax
-  if [ ! -z "$NEO_BUILD" ]; then cd ~/one/phone/firmware/ && ./populate_system.sh $(TARGET_OUT); fi
+  #if [ ! -z "$NEO_BUILD" ]; then cd ~/one/phone/firmware/ && ./populate_system.sh $(TARGET_OUT); fi
 
   $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH \
       ./build/tools/releasetools/build_image.py \
